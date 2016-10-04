@@ -1,0 +1,58 @@
+<!DOCTYPE html >
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mapeo</title>
+<link rel="stylesheet" href="./ol3/ol.css" type="text/css">
+
+<link rel="stylesheet" href="./js/jquery-ui-1.12.0.custom/jquery-ui.css" type="text/css">
+<link rel="stylesheet" href="./bootstrap-3.3.5-dist/css/bootstrap.css" type="text/css">
+</head> 
+<body>
+	<div class="row" >
+		<div class="col-xs-12">	
+			<nav class="navbar navbar-default">
+		      	<div class="container-fluid">
+		      		<ul class="nav navbar-nav">
+				      <li><a href="#" class="glyphicon glyphicon-plus" onclick="agregarElementoGis()"></a></li>
+				      <li><a href="#" class="glyphicon glyphicon-pencil" onclick="editarElementoGis()"></a></li>
+				      <li><a href="#" class="glyphicon glyphicon-trash" onclick="eliminarElementoGis()"></a></li>
+				      <li><a href="#" class="glyphicon glyphicon-hand-up" onclick="seleccionarElementoGis()"></a></li>
+				      <li><a><span id='mensaje'></span></a></li>
+				    </ul>
+				</div>
+			</nav>
+		</div>	
+	</div>
+	<div class="row" style="border:2px">
+		<div class="col-xs-2">
+			<ul class="list-group">
+			  <li class="list-group-item">
+			  	<a href="#">
+			  	<input type="radio" name="radio_capas" id="radio_sector_comercial" >
+			  	<input type="checkbox" name="capas_gis" id="piura_sig_sector_comercial" value="piura_sig_sector_comercial"> <b>Sectores Comerciales</b> 
+			  	</a>
+			  </li>
+			  <li class="list-group-item">
+			  	<a href="#">
+		  		<input type="radio" name="radio_capas" id="radio_manzanas" >
+		  		<input type="checkbox" name="capas_gis" id="piura_sig_manzanas" value="piura_sig_manzanas"> <b>Manzanas</b> 
+			  	</a>
+			  </li>
+			  <li class="list-group-item">
+			  	<input type="radio" name="radio_capas" id="radio_predios" >
+			  	<a href="#"><input type="checkbox" name="capas_gis" id="piura_sig_predios" value="piura_sig_predios"> <b>Predios</b> 
+			  	</a>
+			  </li>
+			</ul>
+		</div>
+		<div class="col-xs-10" id="map"></div>
+	</div>
+	<div id='ventana_emergente'></div>
+	<script src="./js/jquery-1.11.2.js" type="text/javascript"></script>
+	<script src="./js/jquery-ui-1.12.0.custom/jquery-ui.js" type="text/javascript"></script>
+	<script src="./ol3/ol.js" type="text/javascript"></script>
+	<script src="./bootstrap-3.3.5-dist/js/bootstrap.min.js" type="text/javascript"></script>
+	<script src="./js/scripts.js" type="text/javascript"></script>
+</body>
+</html>

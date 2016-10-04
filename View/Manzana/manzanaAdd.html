@@ -1,0 +1,42 @@
+
+<form>
+	<label>Nro municipal</label><input type="text" id="mz_nro_municipal" name="mz_nro_municipal"><br>
+	<label>Nro manzana</label><input type="text" id="mz_ubigeo" name="mz_ubigeo"><br>
+	<input type="hidden" id="hidden_geometria" name="hidden_geometria" value="{{geometria}}">
+	<input type="button" id="btn_add_manzana" name="btn_add_manzana" value="Guardar Cambios">	
+</form>
+
+<script>
+	$('#btn_add_manzana').click(function(){
+			var datos_formulario = {
+				nro_municipal:  $('#mz_nro_municipal').val(), 
+				mz_ubigeo: $('#mz_ubigeo').val(), 
+				geometria: $('#hidden_geometria').val()
+			};
+			$.ajax({
+      	 		method:"POST",
+      	 		url : "/manzana/add",
+      	 		data: datos_formulario,
+      	 		success: function(data){
+      	 			$('#ventana_emergente').dialog('close');
+      	 			if (data='1'){     
+                                    $('#mensaje').show(); 	 		
+                                    $('#mensaje').text('manzana registrada correctamente!!!');
+      	 				setTimeout(function() {
+                                            $("#mensaje").fadeOut(1500);
+                                        },3000);
+      	 			}
+      	 			else{
+      	 				$('#mensaje').show(2000, function(){
+                                          $('#mensaje').show();               
+                                          $('#mensaje').text('Error al registrar manzana catastral!!!');
+                                          setTimeout(function() {
+                                                  $("#mensaje").fadeOut(1500);
+                                              },3000);
+                                    });
+      	 			}
+      	 		}
+      	 	});
+			
+      });
+</script>

@@ -1,0 +1,76 @@
+<!DOCTYPE html >
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ejemplo de estilos CSS en un archivo externo</title>
+<link rel="stylesheet" type="text/css" href="styles.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="icomoon/style.css" media="screen" />
+<!--link rel="stylesheet" href="http://openlayers.org/en/v3.17.1/css/ol.css" type="text/css"-->
+<link rel="stylesheet" href="./ol3/ol.css" type="text/css">
+<!--script src="http://openlayers.org/en/v3.17.1/build/ol.js" type="text/javascript"></script-->
+<script src="./ol3/ol.js" type="text/javascript"></script>
+<link rel="stylesheet" href="./js/jquery-ui-1.12.0.custom/jquery-ui.css" type="text/css">
+<script src="./js/jquery-1.11.2.js" type="text/javascript"></script>
+<script src="./js/jquery-ui-1.12.0.custom/jquery-ui.js" type="text/javascript"></script>
+<script src="./js/scripts.js" type="text/javascript"></script>
+<!--script src='./public/js/jquery-1.11.2.js' type="text/javascript"></script-->
+</head> 
+<body>
+	<header>
+		<div class="menu_bar">
+			<a href="#" class="bt-menu"><span class="icon-list2"></span>Menu</a>
+		</div>
+	</header>
+	<nav>
+		<ul>
+			<li><a href="#">Capas <span class="icon-circle-down"></span></a>
+				<form>
+					<ul class="children">
+						<li><a href="#"><input type="radio" name="capas_web" value="male" checked>Ninguna </a></li>
+						<li><a href="#"><input type="radio" name="capas_web" value="male">Satelital </a></li>
+						<li><a href="#"><input type="radio" name="capas_web" value="male">Caminos </a></li>
+						<!--li><a href="#"><input type="checkbox" name="capas_gis" id="piura_sig_distrito" value="piura_sig_distrito">Distritos </a></li-->
+						<li><a href="#"><input type="checkbox" name="capas_gis" id="piura_sig_sector_comercial" value="piura_sig_sector_comercial">Sectores Comerciales </a></li>
+						<!--li><a href="#"><input type="checkbox" name="capas_gis" id="piura_sig_sector_operacional" value="piura_sig_sector_operacional">Sectores Operacionales </a></li>
+						<li><a href="#"><input type="checkbox" name="capas_gis" id="piura_sig_urbanismos" value="piura_sig_urbanismos">Urbanimos </a></li-->
+						<li><a href="#"><input type="checkbox" name="capas_gis" id="piura_sig_manzanas" value="piura_sig_manzanas">Manzanas </a></li>
+						<li><a href="#"><input type="checkbox" name="capas_gis" id="piura_sig_predios" value="piura_sig_predios">Predios </a></li>
+						<!--li><a href="#"><input type="checkbox" name="capas_gis" id="piura_sig_clientes" value="piura_sig_clientes">Clientes con Suministro </a></li>
+						<li><a href="#"><input type="checkbox" name="capas_gis" id="piura_sig_clientes_facpot" value="piura_sig_clientes_facpot">Clientes sin Suministro </a></li>
+						<li><a href="#"><input type="checkbox" name="capas_gis" id="piura_sig_calles" value="piura_sig_calles">Calles </a></li-->
+					</ul>
+				</form>
+			</li>
+			<li><a href="#" id="administrar_capa">Administrar Capa <span class="icon-circle-down"></span></a>
+				<form>
+					<ul class="children" id="ul_administrar_capa">
+						<li id="li_administrar_capa">
+						</li>
+					</ul>
+				</form>
+			</li>
+			<li class="submenu">
+				<a href="#">Consultar <span class="icon-circle-down"></span></a>
+				<ul class="children">
+					<li><a href="#">Nro Suministro </a></li>
+					<li><a href="#">Codigo Catastral </a></li>
+					<li><a href="#">DNI Usuario </a></li>
+				</ul>
+			</li>
+			<li><a href="#">Usuarios <span class="icon-circle-down"></a></span></li>
+			<li><a href="#">Cerrar Session</a></li>
+		</ul>
+	</nav>
+	<div id='lbl_mensaje' name='lbl_mensaje'></div>
+	<div id="div_administrar_capa">
+		<button type="button" onclick='agregarElementoGis()' class='linea icon-plus'></button>
+		<button type="button" onclick='editarElementoGis()' class='linea icon-pencil' ></button>
+		<button type="button" onclick='eliminarElementoGis()' class='linea icon-bin'></button>
+		<button type="button" onclick='seleccionarElementoGis()' class='linea icon-point-up'></button>
+	</div>
+	<article>
+		<div id="map"></div>
+	</article>
+	<div id="ventana_emergente"></div>
+</body>
+</html>
