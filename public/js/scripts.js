@@ -1,8 +1,9 @@
 var map, manzanas,clientes,sectores_comerciales;
-var array_feature, geometria;
+var array_feature, geometria,dibujos;
+var features;
 
 function init(){
-
+	$('#dialog-confirm').hide();
 	$('#piura_sig_manzanas').prop('checked',false);
 
 	$('.nav-tabs a').click(function(){
@@ -21,6 +22,12 @@ function init(){
 							'FORMAT' : 'image/png'
 						}
 					})});*/  
+
+ dibujos = new ol.layer.Vector({
+ 	source: new ol.source.Vector()
+ });
+
+ 
 
   manzanas = new ol.layer.Tile({
 					source : new ol.source.TileWMS({
@@ -64,7 +71,7 @@ function init(){
         target: 'map',
         view: view
   	});
-
+	map.addLayer(dibujos);
   	manzanas.setVisible(false);
 	predios.setVisible(false);
 	sectores_comerciales.setVisible(false);
@@ -122,7 +129,7 @@ function agregarElementoGis(){
 	console.log(radio_button);
 	if(radio_button=='radio_manzanas'){
 
-		  var features = new ol.Collection();
+		  features = new ol.Collection();
 	      var featureOverlay = new ol.layer.Vector({
 	        source: new ol.source.Vector({features: features}),
 	        style: new ol.style.Style({
@@ -148,7 +155,8 @@ function agregarElementoGis(){
 	      function addInteraction() {
 	        draw = new ol.interaction.Draw({
 	          features: features,
-	          type: 'Polygon'
+	          type: 'Polygon',
+	          // source: dibujos.getSource()
 	        });
 	        map.addInteraction(draw);
 
@@ -186,7 +194,7 @@ function seleccionarElementoGis(){
 
 		  map.removeInteraction();
 
-		  var features = new ol.Collection();
+		  features = new ol.Collection();
 		  var featureOverlay = new ol.layer.Vector({
 	        source: new ol.source.Vector({features: features}),
 	        style: new ol.style.Style({
@@ -208,11 +216,12 @@ function seleccionarElementoGis(){
 	      featureOverlay.setMap(map);
 
 	      var draw;
-
+	      features.clear()
 	      function addInteraction() {
 	        draw = new ol.interaction.Draw({
 	          features: features,
-	          type: 'Polygon'
+	          type: 'Polygon',
+	          // source: dibujos.getSource()
 	        });
 	        map.addInteraction(draw);
 	        
@@ -273,17 +282,18 @@ function eliminarElementoGis(){
 					    	data: {geometria: geometria},
 					    	success: function(data){
 					    		if(data='1'){
-					    			$('#mensaje').show(); 	 		
+					    			manzanas.getSource().refresh();
+					    			console.log('eliminada');
+					    			/*$('#mensaje').show(); 	 		
 				                    $('#mensaje').text('manzana eliminada correctamente!!!');
-								                    setTimeout(function() {
+								    setTimeout(function() {
 				                            $("#mensaje").fadeOut(1500);
-				                        },3000);
-								     manzanas.getSource().refresh();
+				                        },3000);								    */
 					    		}
 					    		else{
 					    			$('#mensaje').show(); 	 		
 				                    $('#mensaje').text('Error al eliminar manzana!!!');
-								                    setTimeout(function() {
+								    setTimeout(function() {
 				                            $("#mensaje").fadeOut(1500);
 				                        },3000);
 					    		}
