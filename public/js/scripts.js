@@ -260,27 +260,42 @@ function eliminarElementoGis(){
 	var radio_button = $('input:radio[name=radio_capas]:checked').val();
 	if(radio_button!='undefined'){
 
-		$.ajax({
-	    	method: "POST",
-	    	url: "/manzana/eliminar",
-	    	data: {geometria: geometria},
-	    	success: function(data){
-	    		if(data!=''){
-	    			var objectfeature = new ol.format.GeoJSON();
-			    	var  feature = objectfeature.readFeature(data);
-			    	//array_feature.push(feature);
-			    	console.log(feature);
-			    	var vectorSource = new ol.source.Vector({
-				        features: [feature]
-				      });
-		    		var vector = new ol.layer.Vector({
-		    			source : vectorSource
-		    		});
-		    		map.addLayer(vector);
-	    		}
-	    	}
-	    });
-		
+		$( "#dialog-confirm" ).dialog({
+		      resizable: false,
+		      height: "auto",
+		      width: 400,
+		      modal: true,
+		      buttons: {
+		        "Eliminar Manzana": function() {
+		          		$.ajax({
+					    	method: "POST",
+					    	url: "/manzana/delete",
+					    	data: {geometria: geometria},
+					    	success: function(data){
+					    		if(data='1'){
+					    			$('#mensaje').show(); 	 		
+				                    $('#mensaje').text('manzana eliminada correctamente!!!');
+								                    setTimeout(function() {
+				                            $("#mensaje").fadeOut(1500);
+				                        },3000);
+								     manzanas.getSource().refresh();
+					    		}
+					    		else{
+					    			$('#mensaje').show(); 	 		
+				                    $('#mensaje').text('Error al eliminar manzana!!!');
+								                    setTimeout(function() {
+				                            $("#mensaje").fadeOut(1500);
+				                        },3000);
+					    		}
+					    	}
+					    });
+					    $( this ).dialog( "close" );
+		        },
+		        Cancel: function() {
+		          $( this ).dialog( "close" );
+		        }
+		      }
+		    });		
 	}
 	else{
 		$('#lbl_mensaje').text('Debe Elegir una opcion del Menu Administrar Capa');      	 				

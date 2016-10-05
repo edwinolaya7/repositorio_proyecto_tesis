@@ -101,9 +101,9 @@ app.post('/manzana/Selection',function(req,res){
 	});
 });
 
-app.post('/manzana/eliminar',function(req,res){
+app.post('/manzana/delete',function(req,res){
 	var geom = req.body.geometria;
-	manzana_model.manzanaEliminar(geom).then(function(data){
+	manzana_model.manzanaDelete(geom).then(function(data){
 		res.send(data);
 	});
 });

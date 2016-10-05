@@ -39,6 +39,15 @@ function manzanaSelection(geom){
 		});	
 }
 
+function manzanaDelete(geom){
+	return conexionbd.sequelize.query('SELECT gis.gis_manzana_delete(?) as delete',
+		  { replacements: [geom], type: conexionbd.sequelize.QueryTypes.SELECT, model: manzanabd }
+		).then(function(data) {
+		  return data;
+		});	
+}
+
 //module.exports.usuarioModel = usuarioModel;
 module.exports.manzanaAdd = manzanaAdd;
 module.exports.manzanaSelection = manzanaSelection;
+module.exports.manzanaDelete = manzanaDelete;

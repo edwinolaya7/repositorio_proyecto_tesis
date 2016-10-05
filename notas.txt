@@ -46,3 +46,28 @@ $BODY$
   COST 100;
 ALTER FUNCTION gis_manzana_selection(character varying)
   OWNER TO postgres;
+
+---------------------------------------------------------
+-- DROP FUNCTION gis_manzana_selection(character varying);
+
+CREATE OR REPLACE FUNCTION gis_manzana_delete(geom_ character varying)
+  RETURNS integer AS
+$BODY$
+declare nro_manzanas integer;
+begin
+	if (geom_!='') then 
+		--select st_asgeojson(psm.geom)::text into geometria from piura_sig_manzanas psm where st_intersects(psm.geom, st_transform(st_geomfromtext(geom_,3857),32717));
+		select count(*) into nro_manzanas from piura_sig_manzanas  
+		where st_intersects(geom, st_transform(st_geomfromtext(geom_,3857),32717));
+		if (nro_manzanas>0) then
+			delete from  piura_sig_manzanas where st_intersects(st_transform(st_geomfromtext(geom_,3857),32717), geom);
+			return 1;
+		end if;	
+	end if;
+	return 0;
+end
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION gis_manzana_delete(character varying)
+  OWNER TO postgres;
