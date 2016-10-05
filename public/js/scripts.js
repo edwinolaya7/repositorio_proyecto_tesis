@@ -1,7 +1,9 @@
 var map, manzanas,clientes,sectores_comerciales;
-var array_feature;
+var array_feature, geometria;
 
 function init(){
+
+	$('#piura_sig_manzanas').prop('checked',false);
 
 	$('.nav-tabs a').click(function(){
 	    $(this).tab('show');
@@ -179,9 +181,11 @@ function agregarElementoGis(){
 }
 
 function seleccionarElementoGis(){
-	console.log('selecciona');
 	var radio_button = $('input:radio[name=radio_capas]:checked').val();
 	if(radio_button!='undefined'){
+
+		  map.removeInteraction();
+
 		  var features = new ol.Collection();
 		  var featureOverlay = new ol.layer.Vector({
 	        source: new ol.source.Vector({features: features}),
@@ -214,10 +218,10 @@ function seleccionarElementoGis(){
 	        
 	        draw.on('drawend', function (object) {
 
-
+	        	console.log(object);
 	        	var format = new ol.format.WKT(); 
-	        	var geometria = format.writeFeature(object.feature);
-	        	$.ajax({
+	        	geometria = format.writeFeature(object.feature);
+	        	/*$.ajax({
 			    	method: "POST",
 			    	url: "/manzana/Selection",
 			    	data: {geometria: geometria},
@@ -236,7 +240,7 @@ function seleccionarElementoGis(){
 				    		map.addLayer(vector);
 			    		}
 			    	}
-			    });
+			    });*/
 			});
 	      }
 	      
@@ -253,16 +257,30 @@ function editarElementoGis(){
 }
 
 function eliminarElementoGis(){
-	var radio_button = $("input[name='rb_opcion']:checked").val();
+	var radio_button = $('input:radio[name=radio_capas]:checked').val();
 	if(radio_button!='undefined'){
-		var vectorSource = new ol.source.Vector({
-		        features: [array_feature]
-		      });
-		var vector = new ol.layer.Vector({
-			source : vectorSource
-		});
-		map.addLayer(vector);
 
+		$.ajax({
+	    	method: "POST",
+	    	url: "/manzana/eliminar",
+	    	data: {geometria: geometria},
+	    	success: function(data){
+	    		if(data!=''){
+	    			var objectfeature = new ol.format.GeoJSON();
+			    	var  feature = objectfeature.readFeature(data);
+			    	//array_feature.push(feature);
+			    	console.log(feature);
+			    	var vectorSource = new ol.source.Vector({
+				        features: [feature]
+				      });
+		    		var vector = new ol.layer.Vector({
+		    			source : vectorSource
+		    		});
+		    		map.addLayer(vector);
+	    		}
+	    	}
+	    });
+		
 	}
 	else{
 		$('#lbl_mensaje').text('Debe Elegir una opcion del Menu Administrar Capa');      	 				

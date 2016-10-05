@@ -101,6 +101,12 @@ app.post('/manzana/Selection',function(req,res){
 	});
 });
 
+app.post('/manzana/eliminar',function(req,res){
+	var geom = req.body.geometria;
+	manzana_model.manzanaEliminar(geom).then(function(data){
+		res.send(data);
+	});
+});
 
 
 app.listen(3000, function(){
