@@ -63,8 +63,7 @@ function init(){
         view: view
   	});
 
-  	//clientes.setVisible(false);
-	manzanas.setVisible(false);
+  	manzanas.setVisible(false);
 	predios.setVisible(false);
 	sectores_comerciales.setVisible(false);
 	map.addLayer(mapTile);
