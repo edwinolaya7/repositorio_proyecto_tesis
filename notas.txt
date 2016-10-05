@@ -1,0 +1,48 @@
+
+-- Function: gis_manzana_add(character varying, integer, character varying)
+
+-- DROP FUNCTION gis_manzana_add(character varying, integer, character varying);
+
+CREATE OR REPLACE FUNCTION gis_manzana_add(
+    nombre_mun character varying,
+    nuevo_nro_manzana integer,
+    geom character varying)
+  RETURNS integer AS
+$BODY$
+begin
+	if (nombre_mun!='' and nuevo_nro_manzana!=0 and geom!='') then 
+		INSERT INTO gis.piura_sig_manzanas(nombre_mun, nuevo_nro_manzana, geom) VALUES ( nombre_mun,nuevo_nro_manzana,		
+		st_transform(st_geomfromtext(geom,3857),32717));	
+		return 1;
+	end if;
+	return 0;
+end
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION gis_manzana_add(character varying, integer, character varying)
+  OWNER TO postgres;
+
+
+-- Function: gis_manzana_selection(character varying)
+
+-- DROP FUNCTION gis_manzana_selection(character varying);
+
+CREATE OR REPLACE FUNCTION gis_manzana_selection(geom_ character varying)
+  RETURNS text AS
+$BODY$
+declare geometria text;
+begin
+	if (geom_!='') then 
+		--select st_asgeojson(psm.geom)::text into geometria from piura_sig_manzanas psm where st_intersects(psm.geom, st_transform(st_geomfromtext(geom_,3857),32717));
+		select ('{"type":"Feature","geometry":' || st_asgeojson(st_transform(psm.geom,3857)) || ',"properties":null}') into geometria from piura_sig_manzanas psm 
+		where st_intersects(psm.geom, st_transform(st_geomfromtext(geom_,3857),32717));
+		return geometria;
+	end if;
+	return '';
+end
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION gis_manzana_selection(character varying)
+  OWNER TO postgres;
