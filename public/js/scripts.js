@@ -1,6 +1,6 @@
-var map, manzanas,clientes,sectores_comerciales;
-var array_feature, geometria,dibujos;
-var features;
+var  map, manzanas,clientes,sectores_comerciales;
+var array_feature, geometria, draw;
+var features = new ol.Collection();;
 
 function init(){
 	$('#dialog-confirm').hide();
@@ -14,22 +14,8 @@ function init(){
 	var	mapTile = new  ol.layer.Tile({
 		source: new ol.source.OSM()
 	});
-  /*clientes = new ol.layer.Tile({
-					source : new ol.source.TileWMS({
-						url : 'http://localhost:8080/geoserver/wms',
-						params: {
-							'LAYERS' :'eps_gis:piura_sig_clientes',
-							'FORMAT' : 'image/png'
-						}
-					})});*/  
-
- dibujos = new ol.layer.Vector({
- 	source: new ol.source.Vector()
- });
-
  
-
-  manzanas = new ol.layer.Tile({
+	 manzanas = new ol.layer.Tile({
 					source : new ol.source.TileWMS({
 						url : 'http://localhost:8080/geoserver/wms',
 						params: {
@@ -38,29 +24,29 @@ function init(){
 						},
 						transparent:true
 					})}); 
-  manzanas.setOpacity(0.5);
+	  manzanas.setOpacity(0.5);
 
-  predios = new ol.layer.Tile({
-					source : new ol.source.TileWMS({
-						url : 'http://localhost:8080/geoserver/wms',
-						params: {
-							'LAYERS' :'eps_gis:piura_sig_predios',
-							'FORMAT' : 'image/png'
-						},
-						transparent:true
-					})}); 
-  predios.setOpacity(0.5);
+	  predios = new ol.layer.Tile({
+						source : new ol.source.TileWMS({
+							url : 'http://localhost:8080/geoserver/wms',
+							params: {
+								'LAYERS' :'eps_gis:piura_sig_predios',
+								'FORMAT' : 'image/png'
+							},
+							transparent:true
+						})}); 
+	  predios.setOpacity(0.5);
 
-  sectores_comerciales = new ol.layer.Tile({
-					source : new ol.source.TileWMS({
-						url : 'http://localhost:8080/geoserver/wms',
-						params: {
-							'LAYERS' :'eps_gis:piura_sig_sector_comercial',
-							'FORMAT' : 'image/png'
-						},
-						transparent:true
-					})});  
-  sectores_comerciales.setOpacity(0.5);
+	  sectores_comerciales = new ol.layer.Tile({
+						source : new ol.source.TileWMS({
+							url : 'http://localhost:8080/geoserver/wms',
+							params: {
+								'LAYERS' :'eps_gis:piura_sig_sector_comercial',
+								'FORMAT' : 'image/png'
+							},
+							transparent:true
+						})});  
+	  sectores_comerciales.setOpacity(0.5);
 
 	var view = new ol.View({
 			center: ol.proj.fromLonLat([-80.615916, -5.191902]),
@@ -71,15 +57,13 @@ function init(){
         target: 'map',
         view: view
   	});
-	map.addLayer(dibujos);
   	manzanas.setVisible(false);
 	predios.setVisible(false);
 	sectores_comerciales.setVisible(false);
 	map.addLayer(mapTile);
 	map.addLayer(sectores_comerciales);
 	map.addLayer(manzanas);	
-	map.addLayer(predios);	
-	//map.addLayer(clientes);
+	map.addLayer(predios);
 
 }
 
@@ -124,9 +108,8 @@ $(document).ready(function(){
 });
 
 function agregarElementoGis(){
-	console.log('agrega');
+	
 	var radio_button = $('input:radio[name=radio_capas]:checked').attr('id');
-	console.log(radio_button);
 	if(radio_button=='radio_manzanas'){
 
 		  features = new ol.Collection();
@@ -155,8 +138,7 @@ function agregarElementoGis(){
 	      function addInteraction() {
 	        draw = new ol.interaction.Draw({
 	          features: features,
-	          type: 'Polygon',
-	          // source: dibujos.getSource()
+	          type: 'Polygon'
 	        });
 	        map.addInteraction(draw);
 
@@ -192,9 +174,6 @@ function seleccionarElementoGis(){
 	var radio_button = $('input:radio[name=radio_capas]:checked').val();
 	if(radio_button!='undefined'){
 
-		  map.removeInteraction();
-
-		  features = new ol.Collection();
 		  var featureOverlay = new ol.layer.Vector({
 	        source: new ol.source.Vector({features: features}),
 	        style: new ol.style.Style({
@@ -215,41 +194,18 @@ function seleccionarElementoGis(){
 	      });
 	      featureOverlay.setMap(map);
 
-	      var draw;
-	      features.clear()
 	      function addInteraction() {
 	        draw = new ol.interaction.Draw({
 	          features: features,
-	          type: 'Polygon',
-	          // source: dibujos.getSource()
+	          type: 'Polygon'
 	        });
 	        map.addInteraction(draw);
 	        
 	        draw.on('drawend', function (object) {
 
-	        	console.log(object);
 	        	var format = new ol.format.WKT(); 
 	        	geometria = format.writeFeature(object.feature);
-	        	/*$.ajax({
-			    	method: "POST",
-			    	url: "/manzana/Selection",
-			    	data: {geometria: geometria},
-			    	success: function(data){
-			    		if(data!=''){
-			    			var objectfeature = new ol.format.GeoJSON();
-					    	var  feature = objectfeature.readFeature(data);
-					    	//array_feature.push(feature);
-					    	console.log(feature);
-					    	var vectorSource = new ol.source.Vector({
-						        features: [feature]
-						      });
-				    		var vector = new ol.layer.Vector({
-				    			source : vectorSource
-				    		});
-				    		map.addLayer(vector);
-			    		}
-			    	}
-			    });*/
+	        	features.clear();
 			});
 	      }
 	      
@@ -262,7 +218,15 @@ function seleccionarElementoGis(){
 }
 
 function editarElementoGis(){
-	
+
+	var radio_button = $('input:radio[name=radio_capas]:checked').val();
+	if(radio_button!='undefined'){
+
+	}
+	else{
+		$('#lbl_mensaje').text('Debe Elegir una opcion del Menu Administrar Capa');
+		$('#lbl_mensaje').toggle(2000, function(){	$('#lbl_mensaje').text('');	});
+	}
 }
 
 function eliminarElementoGis(){
@@ -282,13 +246,7 @@ function eliminarElementoGis(){
 					    	data: {geometria: geometria},
 					    	success: function(data){
 					    		if(data='1'){
-					    			manzanas.getSource().refresh();
-					    			console.log('eliminada');
-					    			/*$('#mensaje').show(); 	 		
-				                    $('#mensaje').text('manzana eliminada correctamente!!!');
-								    setTimeout(function() {
-				                            $("#mensaje").fadeOut(1500);
-				                        },3000);								    */
+					    			manzanas.getSource().updateParams({'time':Date.now()});					    			
 					    		}
 					    		else{
 					    			$('#mensaje').show(); 	 		

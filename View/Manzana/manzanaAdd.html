@@ -20,11 +20,13 @@
       	 		success: function(data){
       	 			$('#ventana_emergente').dialog('close');
       	 			if (data='1'){     
-                                    $('#mensaje').show(); 	 		
-                                    $('#mensaje').text('manzana registrada correctamente!!!');
-      	 				                    setTimeout(function() {
-                                            $("#mensaje").fadeOut(1500);
-                                        },3000);
+                    console.log('agregado');
+                    manzanas.getSource().updateParams({'time':Date.now()}); 
+                    $('#mensaje').show();
+                    $('#mensaje').text('manzana registrada correctamente!!!');
+	                    setTimeout(function() {
+                            $("#mensaje").fadeOut(1500);
+                        },3000);
       	 			}
       	 			else{
       	 				$('#mensaje').show(2000, function(){
