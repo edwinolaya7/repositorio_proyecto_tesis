@@ -3,6 +3,14 @@ var array_feature, geometria, draw;
 var features = new ol.Collection();;
 
 function init(){
+
+	$( "#editar_elemento_gis" ).prop( "disabled", true );
+	$( "#guardar_elemento_gis" ).prop( "disabled", true );
+	$( "#agregar_elemento_gis" ).prop( "disabled", true );
+	$( "#eliminar_elemento_gis" ).prop( "disabled", true );
+	$( "#seleccionar_elemento_gis" ).prop( "disabled", true );
+
+
 	$('#dialog-confirm').hide();
 	$('#piura_sig_manzanas').prop('checked',false);
 
@@ -112,6 +120,7 @@ function agregarElementoGis(){
 	var radio_button = $('input:radio[name=radio_capas]:checked').attr('id');
 	if(radio_button=='radio_manzanas'){
 
+		  console.log('agregar manzanas');
 		  features = new ol.Collection();
 	      var featureOverlay = new ol.layer.Vector({
 	        source: new ol.source.Vector({features: features}),
@@ -134,8 +143,6 @@ function agregarElementoGis(){
 	      featureOverlay.setMap(map);
 
 	      var draw;
-
-	      function addInteraction() {
 	        draw = new ol.interaction.Draw({
 	          features: features,
 	          type: 'Polygon'
@@ -153,12 +160,11 @@ function agregarElementoGis(){
 			    	success: function(data){
 			    		$('#ventana_emergente').html(data);
 			    		$('#ventana_emergente').dialog();
+			    		features.clear();
+			    		map.getInteractions().clear();
 			    	}
 			    });
 			});
-	      }
-	      
-	      addInteraction();
 
 	}
 	else if(radio_button=='radio_predios'){
@@ -173,7 +179,7 @@ function agregarElementoGis(){
 function seleccionarElementoGis(){
 	var radio_button = $('input:radio[name=radio_capas]:checked').val();
 	if(radio_button!='undefined'){
-
+		  console.log('seleccionar elementos');
 		  var featureOverlay = new ol.layer.Vector({
 	        source: new ol.source.Vector({features: features}),
 	        style: new ol.style.Style({
@@ -193,8 +199,6 @@ function seleccionarElementoGis(){
 	        })
 	      });
 	      featureOverlay.setMap(map);
-
-	      function addInteraction() {
 	        draw = new ol.interaction.Draw({
 	          features: features,
 	          type: 'Polygon'
@@ -202,14 +206,9 @@ function seleccionarElementoGis(){
 	        map.addInteraction(draw);
 	        
 	        draw.on('drawend', function (object) {
-
 	        	var format = new ol.format.WKT(); 
 	        	geometria = format.writeFeature(object.feature);
-	        	features.clear();
 			});
-	      }
-	      
-	      addInteraction();
 	}
 	else{
 		$('#lbl_mensaje').text('Debe Elegir una opcion del Menu Administrar Capa');
@@ -229,10 +228,23 @@ function editarElementoGis(){
 	}
 }
 
+
+function guardarElementoGis(){
+
+	var radio_button = $('input:radio[name=radio_capas]:checked').val();
+	if(radio_button!='undefined'){
+		
+	}
+	else{
+		$('#lbl_mensaje').text('Debe Elegir una opcion del Menu Administrar Capa');
+		$('#lbl_mensaje').toggle(2000, function(){	$('#lbl_mensaje').text('');	});
+	}
+}
+
 function eliminarElementoGis(){
 	var radio_button = $('input:radio[name=radio_capas]:checked').val();
 	if(radio_button!='undefined'){
-
+		console.log('eliminar manzanas');
 		$( "#dialog-confirm" ).dialog({
 		      resizable: false,
 		      height: "auto",
@@ -246,7 +258,8 @@ function eliminarElementoGis(){
 					    	data: {geometria: geometria},
 					    	success: function(data){
 					    		if(data='1'){
-					    			manzanas.getSource().updateParams({'time':Date.now()});					    			
+					    			manzanas.getSource().updateParams({'time':Date.now()});
+					    			features.clear();			    			
 					    		}
 					    		else{
 					    			$('#mensaje').show(); 	 		
